@@ -64,7 +64,7 @@ class Game:
     
     def draw(self): # tela do jogo
         self.clock.tick(FPS)  
-        self.screen.fill((32, 0, 161))
+        self.screen.fill((255, 255, 255))
         self.draw_blackground()
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
@@ -116,8 +116,8 @@ class Game:
             elif event.type == pygame.KEYDOWN:
                 self.run()
 
-    def show_menu(self):#tela de morte
-        self.screen.fill((32, 0, 161))
+    def show_menu(self):
+        self.screen.fill((255, 255, 255))
         half_screen_height = SCREEN_HEIGHT // 2
         hals_screen_width = SCREEN_WIDTH // 2 
         if self.death_count == 0:
