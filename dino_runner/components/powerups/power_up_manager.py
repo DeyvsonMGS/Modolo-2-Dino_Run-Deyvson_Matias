@@ -2,18 +2,19 @@ import random
 import pygame
 from dino_runner.components.powerups.shield import Shield
 
-class PowerUpManager:
+class PowerUpManager():
     def __init__(self):
         self.power_ups = []
-        self.when_appers = 0
+        self.when_appars = 0
 
     def generate_power_up(self, score):
-        if len(self.power_ups) == 0 and self.when_appers == score:
-            self.when_appers += random.randint(200, 300)
+        if len(self.power_ups) == 0 and self.when_appars == score:
+            self.when_appars += random.randint(200, 300)
             self.power_ups.append(Shield())
 
     def update(self, score, game_speed, player):
         self.generate_power_up(score)
+       
         for power_up in self.power_ups:
             power_up.update(game_speed, self.power_ups)
             if player.dino_rect.colliderect(power_up.rect):
@@ -27,8 +28,7 @@ class PowerUpManager:
     def draw(self, screen):
         for power_up in self.power_ups:
             power_up.draw(screen)
-    
-    def reset_power_ups(self):
-        self.power_ups =[]
-        self.when_appers = random.randint(200, 300)
-        
+
+    def reset_power_up(self):
+        self.power_ups = []
+        self.when_appars = random.randint(200, 300)
