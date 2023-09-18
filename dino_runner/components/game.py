@@ -1,4 +1,5 @@
-import pygame 
+import pygame
+import random
 from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
@@ -22,6 +23,7 @@ class Game:
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
         self.power_up_manager = PowerUpManager()
+        self.star_positions = [(random.randint(0, SCREEN_WIDTH), random.randint(0, SCREEN_HEIGHT)) for _ in range(50)]
     
     def execute(self):
         self.running = True
@@ -64,7 +66,9 @@ class Game:
     
     def draw(self): # tela do jogo
         self.clock.tick(FPS)  
-        self.screen.fill((255, 255, 255))
+        self.screen.fill((0, 0, 20))
+        for star_pos in self.star_positions:
+            pygame.draw.circle(self.screen, (255, 255, 255), star_pos, 2)
         self.draw_blackground()
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
@@ -117,7 +121,7 @@ class Game:
                 self.run()
 
     def show_menu(self):
-        self.screen.fill((255, 255, 255))
+        self.screen.fill((104, 136, 242))
         half_screen_height = SCREEN_HEIGHT // 2
         hals_screen_width = SCREEN_WIDTH // 2 
         if self.death_count == 0:
