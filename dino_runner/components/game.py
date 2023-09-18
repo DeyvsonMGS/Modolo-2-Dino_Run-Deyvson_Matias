@@ -1,6 +1,6 @@
 import pygame
 import random
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, SOUND,GAME_OVER
+from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, SOUND, GAME_OVER, CLOUD
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.utils.text_utils import draw_message_component
@@ -17,6 +17,8 @@ class Game:
         self.playing = False
         self.running = False
         self.score = 0
+        self.x_pos_cloud = 0
+        self.y_pos_cloud = 30
         self.best_score = 0
         self.death_count = 0 
         self.game_speed = 20
@@ -62,11 +64,12 @@ class Game:
         self.obstacle_manager.update(self)
         self.update_score()
         self.power_up_manager.update(self.score, self.game_speed, self.player)
+        
 
     def update_score(self):  
         self.score += 1
         if self.score % 100 == 0:
-            self.game_speed +=  5
+            self.game_speed +=  3
 
         if self.score >= self.best_score:
             self.best_score = self.score
@@ -74,6 +77,7 @@ class Game:
     def draw(self): # tela do jogo
         self.clock.tick(FPS)  
         self.screen.fill((0, 0, 20))
+        self.draw_cloud()
         for star_pos in self.star_positions:
             pygame.draw.circle(self.screen, (255, 255, 255), star_pos, 2)
         self.draw_blackground()
@@ -125,6 +129,15 @@ class Game:
                     self.player.has_power_up = False
                     self.player.type = DEFAULT_TYPE
     
+    def draw_cloud(self):
+
+        image_width = CLOUD.get_width()
+        self.screen.blit(CLOUD, (image_width + self.x_pos_cloud, self.y_pos_cloud))
+        if self.x_pos_cloud <= - image_width:
+            self.screen.blit(CLOUD, (image_width + self.x_pos_cloud, self.y_pos_cloud))
+            self.x_pos_cloud = 1000
+        self.x_pos_cloud -= self.game_speed
+
     def handle_events_on_menu(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
