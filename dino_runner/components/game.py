@@ -1,10 +1,11 @@
 import pygame
 import random
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, SOUND
+from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, SOUND,GAME_OVER
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.utils.text_utils import draw_message_component
 from dino_runner.components.powerups.power_up_manager import PowerUpManager
+WHITE = pygame.Color(255, 255, 255)
 
 class Game:
     def __init__(self):
@@ -16,6 +17,7 @@ class Game:
         self.playing = False
         self.running = False
         self.score = 0
+        self.best_score = 0
         self.death_count = 0 
         self.game_speed = 20
         self.x_pos_bg = 0
@@ -65,6 +67,9 @@ class Game:
         self.score += 1
         if self.score % 100 == 0:
             self.game_speed +=  5
+
+        if self.score >= self.best_score:
+            self.best_score = self.score
     
     def draw(self): # tela do jogo
         self.clock.tick(FPS)  
@@ -92,10 +97,17 @@ class Game:
 
     def draw_score(self):
         draw_message_component(
-            f"score:{self.score}",
+            f"Pontuação:{self.score}",
             self.screen,
             pos_x_center = 1000,
             pos_y_center = 50
+        )
+        draw_message_component(
+            f"Melhor pontuação:{self.best_score}",
+            self.screen,
+            pos_x_center = 957,
+            pos_y_center = 75
+
         )
 
     def draw_power_up_time(self): #tempo para mostrar
@@ -123,28 +135,36 @@ class Game:
                 self.run()
 
     def show_menu(self):
-        self.screen.fill((104, 136, 242))
+        self.screen.fill((0, 0, 0))
         half_screen_height = SCREEN_HEIGHT // 2
         hals_screen_width = SCREEN_WIDTH // 2 
         if self.death_count == 0:
             draw_message_component("Pressione qualquer tecla para iniciar", self.screen)
         
         else:
-            draw_message_component("Pressione qualquer tecla para reniciar", self.screen, pos_y_center = half_screen_height + 140)
+            draw_message_component("Pressione qualquer tecla para reniciar", self.screen, pos_y_center = half_screen_height + 270)
             draw_message_component(
                 f"Sua pontuaçao: {self.score}",
                 self.screen,
-                pos_y_center = half_screen_height - 50
+                pos_y_center = half_screen_height + 0,
+                pos_x_center = hals_screen_width - 320
             )
-
 
             draw_message_component(
-                f"Contagem de vidas: {self.death_count} ",
+                f"Melhor pontuaçao: {self.best_score}",
                 self.screen,
-                pos_y_center = half_screen_height - 100
+                pos_y_center = half_screen_height + 0,
+                pos_x_center = hals_screen_width + 320
             )
 
-            self.screen.blit(ICON, (hals_screen_width - 40, half_screen_height - 30))
+            draw_message_component(
+                
+                f"Contagem de vidas: {self.death_count} ",
+                self.screen,
+                pos_y_center = half_screen_height - 250
+            )
+
+            self.screen.blit(GAME_OVER, (hals_screen_width - 250, half_screen_height - 230))
             
         pygame.display.flip()
         self.handle_events_on_menu()

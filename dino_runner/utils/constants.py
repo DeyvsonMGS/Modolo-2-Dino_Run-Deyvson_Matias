@@ -12,6 +12,7 @@ IMG_DIR = os.path.join(os.path.dirname(__file__), "..", "assets")
 
 # Assets Constants
 ICON = pygame.image.load(os.path.join(IMG_DIR, "DinoWallpaper.png"))
+GAME_OVER = pygame.image.load(os.path.join(IMG_DIR, "Other/Game_over.png"))
 
 SOUND = pygame.mixer.Sound(os.path.join(IMG_DIR, "Soms/Musica.mp3"))
 JUMP_SOUND = pygame.mixer.Sound(os.path.join(IMG_DIR, "Soms/Pulo.mp3"))
