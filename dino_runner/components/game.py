@@ -1,6 +1,6 @@
 import pygame
 import random
-from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, SOUND, GAME_OVER, CLOUD
+from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE, SOUND, GAME_OVER, CLOUD, CLOUD1
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.utils.text_utils import draw_message_component
@@ -18,7 +18,9 @@ class Game:
         self.running = False
         self.score = 0
         self.x_pos_cloud = 0
-        self.y_pos_cloud = 30
+        self.x_pos_cloud1 = random.randint(0, 150)
+        self.y_pos_cloud = 10
+        self.y_pos_cloud1 = 60
         self.best_score = 0
         self.death_count = 0 
         self.game_speed = 20
@@ -97,7 +99,7 @@ class Game:
         if self.x_pos_bg <= - image_width:
             self.screen.blit(BG, (image_width + self.x_pos_bg, self.y_pos_bg))
             self.x_pos_bg = 0
-            self.x_pos_bg -= self.game_speed
+        self.x_pos_bg -= self.game_speed
 
     def draw_score(self):
         draw_message_component(
@@ -130,14 +132,25 @@ class Game:
                     self.player.type = DEFAULT_TYPE
     
     def draw_cloud(self):
-
         image_width = CLOUD.get_width()
-        self.screen.blit(CLOUD, (image_width + self.x_pos_cloud, self.y_pos_cloud))
-        if self.x_pos_cloud <= - image_width:
-            self.screen.blit(CLOUD, (image_width + self.x_pos_cloud, self.y_pos_cloud))
-            self.x_pos_cloud = 1000
+        image_width1 = CLOUD1.get_width()
+        
+        # Atualiza as coordenadas das nuvens aleatoriamente
+        if self.x_pos_cloud <= -image_width:
+            self.x_pos_cloud = SCREEN_WIDTH  # Define a posição inicial fora da tela à direita
+            self.y_pos_cloud = random.randint(10, 100)  # Posição vertical aleatória
+        if self.x_pos_cloud1 <= -image_width1:
+            self.x_pos_cloud1 = SCREEN_WIDTH
+            self.y_pos_cloud1 = random.randint(10, 100)
+        
+        # Desenha as nuvens
+        self.screen.blit(CLOUD, (self.x_pos_cloud, self.y_pos_cloud))
+        self.screen.blit(CLOUD1, (self.x_pos_cloud1, self.y_pos_cloud1))
+        
+        # Move as nuvens para a esquerda
         self.x_pos_cloud -= self.game_speed
-
+        self.x_pos_cloud1 -= self.game_speed
+        
     def handle_events_on_menu(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
